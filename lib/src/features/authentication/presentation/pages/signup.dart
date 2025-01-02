@@ -56,6 +56,21 @@ class _SignUpState extends State<SignUp> {
                         textInputAction: TextInputAction.next,
                         focusNode: emailFocusNode,
                         hintText: AppStrings.email,
+                        keyboardType: TextInputType.name,
+                        prefixIcon: 'profile',
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return AppStrings.nameIsRequired;
+                          }
+                          return null;
+                        },
+                      ),
+                      CustomTextFormField(
+                        title: AppStrings.email,
+                        controller: emailController,
+                        textInputAction: TextInputAction.next,
+                        focusNode: emailFocusNode,
+                        hintText: AppStrings.email,
                         keyboardType: TextInputType.emailAddress,
                         prefixIcon: 'email',
                         validator: (value) {

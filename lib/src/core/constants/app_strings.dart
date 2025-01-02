@@ -29,4 +29,5 @@ class AppStrings {
   static const String connectWithPeople = 'Connect with people';
   static const String emailIsRequired = 'Email is required';
   static const String passwordIsRequired = 'Password is required';
+  static const String nameIsRequired = 'Name is required';
 }

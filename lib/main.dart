@@ -2,10 +2,13 @@ import 'package:chatterbox/src/core/constants/app_colors.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/onboarding.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signin.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signup.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
