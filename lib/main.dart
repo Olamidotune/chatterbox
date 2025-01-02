@@ -1,6 +1,7 @@
 import 'package:chatterbox/src/core/constants/app_colors.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/onboarding.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signin.dart';
+import 'package:chatterbox/src/features/authentication/presentation/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         routes: {
           OnboardingScreen.routeName: (context) => const OnboardingScreen(),
           Signin.routeName: (context) => const Signin(),
+          SignUp.routeName: (context) => const SignUp(),
         },
       ),
     );

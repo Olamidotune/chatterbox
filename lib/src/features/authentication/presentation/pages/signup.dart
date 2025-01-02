@@ -1,28 +1,31 @@
 import 'package:chatterbox/src/core/constants/app_colors.dart';
 import 'package:chatterbox/src/core/constants/app_spacing.dart';
 import 'package:chatterbox/src/core/constants/app_strings.dart';
-import 'package:chatterbox/src/features/authentication/presentation/pages/signup.dart';
 import 'package:chatterbox/src/shared/button.dart';
 import 'package:chatterbox/src/shared/custom_text_form_field.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
-class Signin extends StatefulWidget {
-  const Signin({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
-  static const routeName = '/signin';
+  static const routeName = '/SignUp';
 
   @override
-  State<Signin> createState() => _SigninState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SigninState extends State<Signin> {
+class _SignUpState extends State<SignUp> {
   final TextEditingController emailController = TextEditingController();
   final FocusNode emailFocusNode = FocusNode();
   final TextEditingController passwordController = TextEditingController();
   final FocusNode passwordFocusNode = FocusNode();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  final FocusNode confirmPasswordFocusNode = FocusNode();
 
   bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
   final bool busy = false;
 
   @override
@@ -37,7 +40,7 @@ class _SigninState extends State<Signin> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  AppStrings.signIn,
+                  AppStrings.signUp,
                   style: Theme.of(context).textTheme.displayLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryTextColor,
@@ -67,6 +70,7 @@ class _SigninState extends State<Signin> {
                         title: AppStrings.password,
                         controller: passwordController,
                         focusNode: passwordFocusNode,
+                        textInputAction: TextInputAction.next,
                         hintText: AppStrings.password,
                         prefixIcon: 'password',
                         keyboardType: TextInputType.text,
@@ -93,9 +97,46 @@ class _SigninState extends State<Signin> {
                         },
                       ),
                       AppSpacing.verticalSpaceMedium,
+                      CustomTextFormField(
+                        title: AppStrings.confirmPassword,
+                        controller: confirmPasswordController,
+                        focusNode: confirmPasswordFocusNode,
+                        hintText: AppStrings.confirmPassword,
+                        textInputAction: TextInputAction.go,
+                        prefixIcon: 'password',
+                        keyboardType: TextInputType.text,
+                        isPassword: true,
+                        onFieldSubmitted: () {
+                          emailFocusNode.unfocus();
+                          passwordFocusNode.unfocus();
+                        },
+                        onSuffixIconPressed: () {
+                          setState(() {
+                            isConfirmPasswordVisible =
+                                !isConfirmPasswordVisible;
+                          });
+                        },
+                        obscureText: isConfirmPasswordVisible,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return AppStrings.passwordIsRequired;
+                          }
+                          if (value.length < 6) {
+                            return AppStrings
+                                .enterConfirmPasswordAtLeast6Characters;
+                          }
+                          if (passwordController.text !=
+                              confirmPasswordController.text) {
+                            return AppStrings.passwordNotMatch;
+                          }
+                          return null;
+                        },
+                      ),
+                      AppSpacing.verticalSpaceMedium,
                       Button(
-                        text: AppStrings.signIn,
+                        text: AppStrings.signUp,
                         onPressed: () {},
+                        buttonColor: AppColors.greenColor,
                       ),
                       AppSpacing.verticalSpaceMedium,
                       Row(
@@ -111,11 +152,9 @@ class _SigninState extends State<Signin> {
                                 ),
                           ),
                           TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, SignUp.routeName);
-                            },
+                            onPressed: () {},
                             child: Text(
-                              AppStrings.signUp,
+                              AppStrings.signIn,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!

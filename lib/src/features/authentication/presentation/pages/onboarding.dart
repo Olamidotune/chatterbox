@@ -2,6 +2,7 @@ import 'package:chatterbox/src/core/constants/app_colors.dart';
 import 'package:chatterbox/src/core/constants/app_spacing.dart';
 import 'package:chatterbox/src/core/constants/app_strings.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signin.dart';
+import 'package:chatterbox/src/features/authentication/presentation/pages/signup.dart';
 import 'package:chatterbox/src/shared/button.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               AppSpacing.verticalSpaceMedium,
               Button(
                 text: AppStrings.signUp,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(SignUp.routeName);
+                },
               ),
               AppSpacing.verticalSpaceMedium,
               Button(
