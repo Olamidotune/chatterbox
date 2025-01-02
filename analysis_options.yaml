@@ -1,0 +1,12 @@
+include: package:very_good_analysis/analysis_options.5.1.0.yaml
+linter:
+  rules:
+    public_member_api_docs: false
+    sort_pub_dependencies: false
+analyzer:
+  errors:
+    avoid_dynamic_calls: ignore
+    avoid_void_async: ignore
+    deprecated_member_use: ignore
+    lines_longer_than_80_chars: ignore
+    use_build_context_synchronously: ignore
