@@ -16,6 +16,13 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  String name = '';
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
+
+  final TextEditingController nameController = TextEditingController();
+  final FocusNode nameFocusNode = FocusNode();
   final TextEditingController emailController = TextEditingController();
   final FocusNode emailFocusNode = FocusNode();
   final TextEditingController passwordController = TextEditingController();
@@ -52,9 +59,9 @@ class _SignUpState extends State<SignUp> {
                     children: [
                       CustomTextFormField(
                         title: AppStrings.email,
-                        controller: emailController,
+                        controller: nameController,
                         textInputAction: TextInputAction.next,
-                        focusNode: emailFocusNode,
+                        focusNode: nameFocusNode,
                         hintText: AppStrings.email,
                         keyboardType: TextInputType.name,
                         prefixIcon: 'profile',
