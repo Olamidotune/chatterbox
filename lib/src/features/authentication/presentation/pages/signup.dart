@@ -1,10 +1,16 @@
 import 'package:chatterbox/src/core/constants/app_colors.dart';
 import 'package:chatterbox/src/core/constants/app_spacing.dart';
 import 'package:chatterbox/src/core/constants/app_strings.dart';
+import 'package:chatterbox/src/features/authentication/presentation/pages/signin.dart';
+import 'package:chatterbox/src/services/database.dart';
+import 'package:chatterbox/src/services/shared_prefs.dart';
 import 'package:chatterbox/src/shared/button.dart';
+import 'package:chatterbox/src/shared/custom_snackbar.dart';
 import 'package:chatterbox/src/shared/custom_text_form_field.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:random_string/random_string.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -33,7 +39,8 @@ class _SignUpState extends State<SignUp> {
 
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
-  final bool busy = false;
+  bool _busy = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +62,15 @@ class _SignUpState extends State<SignUp> {
                 ),
                 Image.asset('assets/png/logo.png'),
                 Form(
+                  key: _formKey,
                   child: Column(
                     children: [
                       CustomTextFormField(
-                        title: AppStrings.email,
+                        title: AppStrings.name,
                         controller: nameController,
                         textInputAction: TextInputAction.next,
                         focusNode: nameFocusNode,
-                        hintText: AppStrings.email,
+                        hintText: AppStrings.name,
                         keyboardType: TextInputType.name,
                         prefixIcon: 'profile',
                         validator: (value) {
@@ -72,6 +80,7 @@ class _SignUpState extends State<SignUp> {
                           return null;
                         },
                       ),
+                      AppSpacing.verticalSpaceMedium,
                       CustomTextFormField(
                         title: AppStrings.email,
                         controller: emailController,
@@ -81,10 +90,10 @@ class _SignUpState extends State<SignUp> {
                         keyboardType: TextInputType.emailAddress,
                         prefixIcon: 'email',
                         validator: (value) {
-                          if (EmailValidator.validate(value!)) {
-                            return AppStrings.emailIsRequired;
+                          if (EmailValidator.validate(value?.trim() ?? '')) {
+                            return null;
                           }
-                          return null;
+                          return AppStrings.invalidEmailAddress;
                         },
                       ),
                       AppSpacing.verticalSpaceMedium,
@@ -156,8 +165,9 @@ class _SignUpState extends State<SignUp> {
                       ),
                       AppSpacing.verticalSpaceMedium,
                       Button(
+                        busy: _busy,
                         text: AppStrings.signUp,
-                        onPressed: () {},
+                        onPressed: register,
                         buttonColor: AppColors.greenColor,
                       ),
                       AppSpacing.verticalSpaceMedium,
@@ -174,7 +184,9 @@ class _SignUpState extends State<SignUp> {
                                 ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, Signin.routeName);
+                            },
                             child: Text(
                               AppStrings.signIn,
                               style: Theme.of(context)
@@ -198,5 +210,69 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
+  }
+
+  void register() async {
+    if (!_busy && _formKey.currentState!.validate()) {
+      setState(() {
+        _busy = true;
+      });
+      try {
+        final userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        CustomSnackbar.show(
+          context,
+          'Account created successfully',
+        );
+        setState(() {
+          _busy = false;
+        });
+
+        final userId = randomAlphaNumeric(10);
+
+        final userInfoMap = {
+          'name': nameController.text,
+          'email': emailController.text,
+          'username': emailController.text.trim().split('@')[0],
+          'photoUrl':
+              'https://static.vecteezy.com/system/resources/previews/034/951/734/large_2x/dark-blue-silhouette-generic-profile-of-one-person-3d-icon-represent-a-user-or-member-free-png.png',
+          'userId': userId,
+        };
+
+        await DatabaseMethod().addUserDetails(userId, userInfoMap);
+        await SharedPrefs()
+            .saveDisplayUserNameSharedPreference(nameController.text);
+        await SharedPrefs().saveUserEmailSharedPreference(emailController.text);
+        await SharedPrefs().saveUserIDSharedPreference(userId);
+        await SharedPrefs().saveUserProfilePicSharedPreference(
+            'https://static.vecteezy.com/system/resources/previews/034/951/734/large_2x/dark-blue-silhouette-generic-profile-of-one-person-3d-icon-represent-a-user-or-member-free-png.png');
+        await SharedPrefs().saveUserNameSharedPreference(
+          emailController.text.trim().split('@')[0],
+        );
+
+        debugPrint('User: ${userCredential.user!.email}');
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          CustomSnackbar.show(
+            context,
+            'The password provided is too weak.',
+            isError: true,
+          );
+        } else if (e.code == 'email-already-in-use') {
+          CustomSnackbar.show(
+            context,
+            'The account already exists for that email.',
+            isError: true,
+          );
+        }
+      } catch (e) {
+        setState(() {
+          _busy = false;
+        });
+      }
+    }
   }
 }

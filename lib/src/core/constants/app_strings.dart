@@ -30,4 +30,11 @@ class AppStrings {
   static const String emailIsRequired = 'Email is required';
   static const String passwordIsRequired = 'Password is required';
   static const String nameIsRequired = 'Name is required';
+  static const name = 'Name';
+  static const String accountCreatedSuccessfully =
+      'Account created successfully';
+  static const String accountCreationFailed = 'Account creation failed';
+  static const String signInFailed = 'Sign in failed';
+  static const String signOutFailed = 'Sign out failed';
+  static const String invalidEmailAddress = 'Invalid email address';
 }
