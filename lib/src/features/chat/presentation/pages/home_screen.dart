@@ -1,7 +1,11 @@
+// ignore_for_file: strict_raw_type
+
 import 'package:chatterbox/src/core/constants/app_colors.dart';
 import 'package:chatterbox/src/core/constants/app_spacing.dart';
 import 'package:chatterbox/src/core/constants/app_strings.dart';
 import 'package:chatterbox/src/core/extentions/num_extention.dart';
+import 'package:chatterbox/src/features/authentication/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,6 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _search = false;
   final controller = TextEditingController();
   final focusNode = FocusNode();
+  List queryResultSet = [];
+  List tempSearchStore = [];
+  bool _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
         automaticallyImplyLeading: false,
         title: _search
             ? TextField(
+                onChanged: (value) {
+                  _initiateSearch(value.toUpperCase());
+                  debugPrint(value);
+                },
+                onSubmitted: (value) {
+                  debugPrint(value);
+                  _initiateSearch(value.toUpperCase());
+                },
                 textInputAction: TextInputAction.search,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontSize: 14.fontSize,
@@ -61,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             GestureDetector(
               onTap: () {
                 setState(() {
-                  _search = !_search;
+                  _search = false;
                   controller.clear();
                   focusNode.unfocus();
                 });
@@ -102,42 +117,163 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.symmetric(
                 horizontal: AppSpacing.horizontalSpacing,
               ),
-              child: Column(
-                children: [
-                  if (_search)
-                    AppSpacing.verticalSpaceMedium
-                  else
-                    AppSpacing.verticalSpaceSmall,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                  AppSpacing.verticalSpaceMedium,
-                  const ChatContainer(),
-                ],
-              ),
+              child: _search
+                  ? ListView(
+                      primary: false,
+                      shrinkWrap: true,
+                      children: tempSearchStore
+                          .map<Widget>((element) =>
+                              buildResultCard(element as Map<String, dynamic>))
+                          .toList(),
+                    )
+                  : Column(
+                      children: [
+                        if (_search)
+                          AppSpacing.verticalSpaceMedium
+                        else
+                          AppSpacing.verticalSpaceSmall,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                        AppSpacing.verticalSpaceMedium,
+                        const ChatContainer(),
+                      ],
+                    ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _initiateSearch(String value) async {
+    // First handle empty value case
+    if (value.isEmpty) {
+      setState(() {
+        queryResultSet = [];
+        tempSearchStore = [];
+
+        _isSearching = false;
+      });
+      return;
+    }
+
+    // Set search and loading state
+    setState(() {
+      _search = true;
+      _isSearching = true;
+    });
+
+    try {
+      final capitalizedValue = value[0].toUpperCase() + value.substring(1);
+
+      if (queryResultSet.isEmpty && value.length == 1) {
+        // Fetch new data from database
+        final QuerySnapshot docs = await DatabaseMethod().searchByName(value);
+
+        // Handle the case where the search term changed while fetching
+        if (!mounted) return;
+
+        setState(() {
+          queryResultSet = docs.docs.map((doc) => doc.data()).toList();
+          tempSearchStore = queryResultSet;
+          _isSearching = false;
+        });
+      } else {
+        // Filter existing results
+        setState(() {
+          tempSearchStore = queryResultSet
+              .where((element) =>
+                  element['name'].toString().startsWith(capitalizedValue))
+              .toList();
+          _isSearching = false;
+        });
+      }
+    } catch (e) {
+      // Handle any errors that might occur during search
+      if (!mounted) return;
+
+      setState(() {
+        _isSearching = false;
+        // You might want to add error handling here
+        // errorMessage = e.toString();
+      });
+    }
+  }
+
+  Widget buildResultCard(Map<String, dynamic> data) {
+    return _isSearching
+        ? const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primaryColor,
+            ),
+          )
+        : Container(
+            margin: const EdgeInsets.only(
+              top: 8,
+              bottom: 8,
+            ),
+            child: Material(
+              elevation: 5,
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.greyColor.withOpacity(0.5),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: ListTile(
+                  leading: ClipRRect(
+                    child: Image.network(
+                      data['photoUrl'] as String,
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  title: Text(
+                    data['name'] as String,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: AppColors.blackColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.fontSize,
+                        ),
+                  ),
+                  subtitle: Text(
+                    data['email'] as String,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: AppColors.blackColor,
+                          fontSize: 11.fontSize,
+                        ),
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }
 

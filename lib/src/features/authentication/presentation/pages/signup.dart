@@ -3,6 +3,7 @@ import 'package:chatterbox/src/core/constants/app_spacing.dart';
 import 'package:chatterbox/src/core/constants/app_strings.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signin.dart';
 import 'package:chatterbox/src/features/authentication/services/database.dart';
+import 'package:chatterbox/src/features/chat/presentation/pages/home_screen.dart';
 import 'package:chatterbox/src/services/shared_prefs.dart';
 import 'package:chatterbox/src/shared/button.dart';
 import 'package:chatterbox/src/shared/custom_snackbar.dart';
@@ -233,12 +234,25 @@ class _SignUpState extends State<SignUp> {
           _busy = false;
         });
 
+        Future.delayed(
+          const Duration(seconds: 2),
+          () {
+            Navigator.pushNamed(context, HomeScreen.routeName);
+          },
+        );
+
         final userId = randomAlphaNumeric(10);
+
+        final user = nameController.text;
+        final updateUserName =
+            user.replaceFirst(user[0], user[0].toUpperCase());
+        final firstLetter = user.substring(0, 1).toUpperCase();
 
         final userInfoMap = {
           'name': nameController.text,
           'email': emailController.text,
-          'username': emailController.text.trim().split('@')[0],
+          'username': updateUserName.toUpperCase(),
+          'searchKey': firstLetter,
           'photoUrl':
               'https://static.vecteezy.com/system/resources/previews/034/951/734/large_2x/dark-blue-silhouette-generic-profile-of-one-person-3d-icon-represent-a-user-or-member-free-png.png',
           'userId': userId,

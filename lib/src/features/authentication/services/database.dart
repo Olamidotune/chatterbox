@@ -17,4 +17,11 @@ class DatabaseMethod {
         .where('email', isEqualTo: email)
         .get();
   }
+
+  Future<QuerySnapshot> searchByName(String userName) async {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .where('searchKey', isEqualTo: userName.substring(0, 1).toUpperCase())
+        .get();
+  }
 }
