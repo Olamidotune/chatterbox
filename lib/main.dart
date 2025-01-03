@@ -2,6 +2,7 @@ import 'package:chatterbox/src/core/constants/app_colors.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/onboarding.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signin.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signup.dart';
+import 'package:chatterbox/src/features/chat/presentation/pages/chat_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'HelveticaNeueRounded',
           scaffoldBackgroundColor: AppColors.blackColor,
           appBarTheme: const AppBarTheme(
-            backgroundColor: AppColors.whiteColor,
+            backgroundColor: AppColors.blackColor,
             elevation: 0,
           ),
           textTheme: const TextTheme(
