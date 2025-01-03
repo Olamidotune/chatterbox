@@ -32,7 +32,7 @@ class _SigninState extends State<Signin> {
   String photoUrl = '';
   String userId = '';
 
-  bool isPasswordVisible = false;
+  bool isPasswordVisible = true;
   bool _busy = false;
   final _formKey = GlobalKey<FormState>();
 
@@ -86,6 +86,7 @@ class _SigninState extends State<Signin> {
                         onFieldSubmitted: () {
                           emailFocusNode.unfocus();
                           passwordFocusNode.unfocus();
+                          signIn();
                         },
                         onSuffixIconPressed: () {
                           setState(() {
