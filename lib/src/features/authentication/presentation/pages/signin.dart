@@ -3,6 +3,7 @@ import 'package:chatterbox/src/core/constants/app_spacing.dart';
 import 'package:chatterbox/src/core/constants/app_strings.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signup.dart';
 import 'package:chatterbox/src/features/authentication/services/database.dart';
+import 'package:chatterbox/src/features/chat/presentation/pages/chat_screen.dart';
 import 'package:chatterbox/src/services/shared_prefs.dart';
 import 'package:chatterbox/src/shared/button.dart';
 import 'package:chatterbox/src/shared/custom_snackbar.dart';
@@ -204,25 +205,5 @@ class _SigninState extends State<Signin> {
         });
       }
     }
-  }
-}
-
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
-
-  static const routeName = '/chat';
-
-  @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Chat screen'),
-      ),
-    );
   }
 }
