@@ -3,7 +3,7 @@ import 'package:chatterbox/src/features/authentication/presentation/pages/forgot
 import 'package:chatterbox/src/features/authentication/presentation/pages/onboarding.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signin.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signup.dart';
-import 'package:chatterbox/src/features/chat/presentation/pages/chat_screen.dart';
+import 'package:chatterbox/src/features/chat/presentation/pages/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
           OnboardingScreen.routeName: (context) => const OnboardingScreen(),
           Signin.routeName: (context) => const Signin(),
           SignUp.routeName: (context) => const SignUp(),
-          ChatScreen.routeName: (context) => const ChatScreen(),
+          HomeScreen.routeName: (context) => const HomeScreen(),
           ForgotPassword.routeName: (context) => const ForgotPassword(),
         },
       ),

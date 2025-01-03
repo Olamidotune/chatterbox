@@ -4,16 +4,16 @@ import 'package:chatterbox/src/core/constants/app_strings.dart';
 import 'package:chatterbox/src/core/extentions/num_extention.dart';
 import 'package:flutter/material.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   static const routeName = '/chat';
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   final _scrollController = ScrollController();
 
   @override

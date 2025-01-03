@@ -33,8 +33,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Image.asset('assets/png/logo.png',
-                    width: 500.width, height: 200.height),
+                Image.asset(
+                  'assets/png/logo.png',
+                  width: 500.width,
+                  height: 200.height,
+                ),
                 Center(
                   child: Text(
                     AppStrings.hiThereYouForgotYourPassword,
@@ -112,8 +115,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         if (e.code == 'user-not-found') {
           CustomSnackbar.show(context, 'User not found');
         }
-        CustomSnackbar.show(context, e.message ?? 'An error occurred',
-            isError: true);
+        CustomSnackbar.show(
+          context,
+          e.message ?? 'An error occurred',
+          isError: true,
+        );
       } finally {
         setState(() {
           _busy = false;
