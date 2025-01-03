@@ -43,4 +43,6 @@ class AppStrings {
   static const String enterYourEmailAndWellSendYouAResetLink =
       "Enter your email and we'll send you a reset link";
   static const String enterRegisteredEmail = 'Enter Registered Email';
+  static const String searchUser = 'Search User';
+  static const String cancel = 'Cancel';
 }

@@ -15,6 +15,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _scrollController = ScrollController();
+  bool _search = false;
+  final controller = TextEditingController();
+  final focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +25,64 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         centerTitle: false,
         automaticallyImplyLeading: false,
-        title: Text(
-          AppStrings.appName,
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: AppColors.primaryTextColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 24.fontSize,
+        title: _search
+            ? TextField(
+                textInputAction: TextInputAction.search,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: 14.fontSize,
+                      color: AppColors.primaryTextColor,
+                    ),
+                controller: controller,
+                focusNode: focusNode,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.greyColor.withOpacity(0.2),
+                  hintText: AppStrings.searchUser,
+                  hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: AppColors.greyColor,
+                        fontSize: 15.fontSize,
+                      ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: AppColors.greenColor),
+                  ),
+                ),
+              )
+            : Text(
+                AppStrings.appName,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: AppColors.primaryTextColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24.fontSize,
+                    ),
               ),
-        ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-              color: AppColors.primaryTextColor,
+          if (_search)
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _search = !_search;
+                  controller.clear();
+                  focusNode.unfocus();
+                });
+              },
+              child: const Text(
+                AppStrings.cancel,
+                style: TextStyle(color: AppColors.whiteColor),
+              ),
+            )
+          else
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _search = !_search;
+                });
+              },
+              icon: const Icon(
+                Icons.search,
+                color: AppColors.primaryTextColor,
+              ),
             ),
-          ),
           IconButton(
             onPressed: () {},
             icon: const Icon(
@@ -59,6 +104,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Column(
                 children: [
+                  if (_search)
+                    AppSpacing.verticalSpaceMedium
+                  else
+                    AppSpacing.verticalSpaceSmall,
                   const ChatContainer(),
                   AppSpacing.verticalSpaceMedium,
                   const ChatContainer(),
