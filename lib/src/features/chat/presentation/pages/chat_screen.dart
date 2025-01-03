@@ -1,9 +1,20 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  ChatScreen({
+    super.key,
+    this.name,
+    this.userName,
+    this.photoUrl,
+  });
 
   static const String routeName = '/chat';
+
+  String? name;
+  String? userName;
+  String? photoUrl;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
