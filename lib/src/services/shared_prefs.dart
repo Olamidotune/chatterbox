@@ -36,7 +36,7 @@ class SharedPrefs {
   }
 
   Future<bool> saveDisplayUserNameSharedPreference(
-      String displayUserName) async {
+      String displayUserName,) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.setString(displayUserNameKey, displayUserName);
   }

@@ -248,7 +248,7 @@ class _SignUpState extends State<SignUp> {
         await SharedPrefs().saveUserEmailSharedPreference(emailController.text);
         await SharedPrefs().saveUserIDSharedPreference(userId);
         await SharedPrefs().saveUserProfilePicSharedPreference(
-            'https://static.vecteezy.com/system/resources/previews/034/951/734/large_2x/dark-blue-silhouette-generic-profile-of-one-person-3d-icon-represent-a-user-or-member-free-png.png');
+            'https://static.vecteezy.com/system/resources/previews/034/951/734/large_2x/dark-blue-silhouette-generic-profile-of-one-person-3d-icon-represent-a-user-or-member-free-png.png',);
         await SharedPrefs().saveUserNameSharedPreference(
           emailController.text.trim().split('@')[0],
         );
