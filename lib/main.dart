@@ -1,4 +1,5 @@
 import 'package:chatterbox/src/core/constants/app_colors.dart';
+import 'package:chatterbox/src/features/authentication/presentation/pages/forgot_password.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/onboarding.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signin.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signup.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
           Signin.routeName: (context) => const Signin(),
           SignUp.routeName: (context) => const SignUp(),
           ChatScreen.routeName: (context) => const ChatScreen(),
+          ForgotPassword.routeName: (context) => const ForgotPassword(),
         },
       ),
     );

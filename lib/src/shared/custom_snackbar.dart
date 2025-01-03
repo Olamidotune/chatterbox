@@ -14,7 +14,7 @@ class CustomSnackbar {
         style: Theme.of(context)
             .textTheme
             .bodyMedium!
-            .copyWith(color: AppColors.whiteColor),
+            .copyWith(color: AppColors.whiteColor, fontWeight: FontWeight.bold),
       ),
       behavior: SnackBarBehavior.floating,
       backgroundColor: isError ? AppColors.errorColor : AppColors.greenColor,
