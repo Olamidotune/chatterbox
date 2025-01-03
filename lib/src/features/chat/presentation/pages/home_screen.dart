@@ -5,13 +5,13 @@ import 'package:chatterbox/src/core/constants/app_spacing.dart';
 import 'package:chatterbox/src/core/constants/app_strings.dart';
 import 'package:chatterbox/src/core/extentions/num_extention.dart';
 import 'package:chatterbox/src/features/authentication/services/database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:chatterbox/src/services/shared_prefs.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  static const routeName = '/chat';
+  static const routeName = '/home';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -25,6 +25,17 @@ class _HomeScreenState extends State<HomeScreen> {
   List queryResultSet = [];
   List tempSearchStore = [];
   bool _isSearching = false;
+  String? myName;
+  String? myProfilePic;
+  String? myUserName;
+  String? myEmail;
+  String getChatRoomIDByUsername(String a, String b) {
+    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+      return '$b\_$a';
+    } else {
+      return '$a\_$b';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (queryResultSet.isEmpty && value.length == 1) {
         // Fetch new data from database
-        final QuerySnapshot docs = await DatabaseMethod().searchByName(value);
+        final docs = await DatabaseMethod().searchByName(value);
 
         // Handle the case where the search term changed while fetching
         if (!mounted) return;
@@ -219,6 +230,15 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  getMySharedPrefs() async {
+    myName = await SharedPrefs().getDisplayUserNameSharedPreference();
+    myProfilePic = await SharedPrefs().getUserProfilePicSharedPreference();
+    myUserName = await SharedPrefs().getUserNameSharedPreference();
+    myEmail = await SharedPrefs().getUserEmailSharedPreference();
+
+    setState(() {});
+  }
+
   Widget buildResultCard(Map<String, dynamic> data) {
     return _isSearching
         ? const Center(
@@ -226,49 +246,68 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AppColors.primaryColor,
             ),
           )
-        : Container(
-            margin: const EdgeInsets.only(
-              top: 8,
-              bottom: 8,
-            ),
-            child: Material(
-              elevation: 5,
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.whiteColor,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.greyColor.withOpacity(0.5),
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: ListTile(
-                  leading: ClipRRect(
-                    child: Image.network(
-                      data['photoUrl'] as String,
-                      width: 40,
-                      height: 40,
-                      fit: BoxFit.cover,
-                    ),
+        : GestureDetector(
+            onTap: () async {
+              _search = false;
+
+              setState(() {});
+
+              final chatRoomId = getChatRoomIDByUsername(
+                myUserName!,
+                data['username'] as String,
+              );
+
+              final chatRoomInfoMap = {
+                'users': [myUserName, data['username']],
+              };
+
+              await DatabaseMethod()
+                  .createChatRoom(chatRoomId, chatRoomInfoMap);
+            },
+            child: Container(
+              margin: const EdgeInsets.only(
+                top: 8,
+                bottom: 8,
+              ),
+              child: Material(
+                elevation: 5,
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.greyColor.withOpacity(0.5),
+                        blurRadius: 5,
+                        spreadRadius: 1,
+                      ),
+                    ],
                   ),
-                  title: Text(
-                    data['name'] as String,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.fontSize,
-                        ),
-                  ),
-                  subtitle: Text(
-                    data['email'] as String,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: AppColors.blackColor,
-                          fontSize: 11.fontSize,
-                        ),
+                  child: ListTile(
+                    leading: ClipRRect(
+                      child: Image.network(
+                        data['photoUrl'] as String,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    title: Text(
+                      data['name'] as String,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.blackColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.fontSize,
+                          ),
+                    ),
+                    subtitle: Text(
+                      data['email'] as String,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.blackColor,
+                            fontSize: 11.fontSize,
+                          ),
+                    ),
                   ),
                 ),
               ),
