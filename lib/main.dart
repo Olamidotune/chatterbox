@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
           OnboardingScreen.routeName: (context) => const OnboardingScreen(),
           Signin.routeName: (context) => const Signin(),
           SignUp.routeName: (context) => const SignUp(),
+          ChatScreen.routeName: (context) => const ChatScreen(),
         },
       ),
     );

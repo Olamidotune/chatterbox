@@ -2,7 +2,7 @@ import 'package:chatterbox/src/core/constants/app_colors.dart';
 import 'package:chatterbox/src/core/constants/app_spacing.dart';
 import 'package:chatterbox/src/core/constants/app_strings.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signin.dart';
-import 'package:chatterbox/src/services/database.dart';
+import 'package:chatterbox/src/features/authentication/services/database.dart';
 import 'package:chatterbox/src/services/shared_prefs.dart';
 import 'package:chatterbox/src/shared/button.dart';
 import 'package:chatterbox/src/shared/custom_snackbar.dart';
