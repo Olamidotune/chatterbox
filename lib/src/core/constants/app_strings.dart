@@ -37,4 +37,10 @@ class AppStrings {
   static const String signInFailed = 'Sign in failed';
   static const String signOutFailed = 'Sign out failed';
   static const String invalidEmailAddress = 'Invalid email address';
+  static const String hiThereYouForgotYourPassword =
+      "Hi there! You forgot your password?, Don't fret! We got you covered.";
+  static const String dontWorry = "Don't worry!";
+  static const String enterYourEmailAndWellSendYouAResetLink =
+      "Enter your email and we'll send you a reset link";
+  static const String enterRegisteredEmail = 'Enter Registered Email';
 }

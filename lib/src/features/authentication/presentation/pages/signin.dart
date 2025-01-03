@@ -1,9 +1,10 @@
 import 'package:chatterbox/src/core/constants/app_colors.dart';
 import 'package:chatterbox/src/core/constants/app_spacing.dart';
 import 'package:chatterbox/src/core/constants/app_strings.dart';
+import 'package:chatterbox/src/features/authentication/presentation/pages/forgot_password.dart';
 import 'package:chatterbox/src/features/authentication/presentation/pages/signup.dart';
 import 'package:chatterbox/src/features/authentication/services/database.dart';
-import 'package:chatterbox/src/features/chat/presentation/pages/chat_screen.dart';
+import 'package:chatterbox/src/features/chat/presentation/pages/home_screen.dart';
 import 'package:chatterbox/src/services/shared_prefs.dart';
 import 'package:chatterbox/src/shared/button.dart';
 import 'package:chatterbox/src/shared/custom_snackbar.dart';
@@ -106,7 +107,32 @@ class _SigninState extends State<Signin> {
                           return null;
                         },
                       ),
-                      AppSpacing.verticalSpaceMedium,
+                      AppSpacing.verticalSpaceSmall,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                ForgotPassword.routeName,
+                              );
+                            },
+                            child: Text(
+                              AppStrings.forgotPassword,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: AppColors.greenColor,
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      AppSpacing.verticalSpaceSmall,
                       Button(
                         busy: _busy,
                         text: AppStrings.signIn,
@@ -181,7 +207,7 @@ class _SigninState extends State<Signin> {
         await SharedPrefs().saveUserProfilePicSharedPreference(photoUrl);
 
         CustomSnackbar.show(context, 'Welcome $name');
-        await Navigator.pushReplacementNamed(context, ChatScreen.routeName);
+        await Navigator.pushReplacementNamed(context, HomeScreen.routeName);
       } on FirebaseAuthException catch (e) {
         debugPrint(e.toString());
         if (e.code == 'user-not-found') {
