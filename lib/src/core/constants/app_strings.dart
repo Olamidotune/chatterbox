@@ -45,4 +45,5 @@ class AppStrings {
   static const String enterRegisteredEmail = 'Enter Registered Email';
   static const String searchUser = 'Search User';
   static const String cancel = 'Cancel';
+  static const String message = 'Message...';
 }
