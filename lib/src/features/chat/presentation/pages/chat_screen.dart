@@ -148,49 +148,6 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  // void addMessage(bool isClicked) {
-  //   if (_messageController.text.isNotEmpty) {
-  //     final message = _messageController.text;
-  //     _messageController.text = '';
-
-  //     final now = DateTime.now();
-  //     final formattedTime = DateFormat('h:mma').format(now);
-  //     final messageInfoMap = {
-  //       'message': message,
-  //       'sendBy': myUserName,
-  //       'timeStamp': formattedTime,
-  //       'time': FieldValue.serverTimestamp(),
-  //       'photoUrl': myPhotoUrl,
-  //     };
-
-  //     if (messageID == null || messageID!.isEmpty) {
-  //       messageID = randomAlphaNumeric(10);
-  //     }
-
-  //     DatabaseMethod()
-  //         .addMessages(messageID!, messageInfoMap, chatRoomId!)
-  //         .then((value) {
-  //       final lastMessageInfoMap = {
-  //         'lastMessage': message,
-  //         'timeStamp': formattedTime,
-  //         'time': FieldValue.serverTimestamp(),
-  //         'lastMessageSendBy': myUserName,
-  //       };
-
-  //       debugPrint('Here:$lastMessageInfoMap');
-  //       debugPrint('Here:$messageID');
-
-  //       DatabaseMethod().updateLastMessage(
-  //         chatRoomId!,
-  //         lastMessageInfoMap,
-  //       );
-  //       if (isClicked) {
-  //         messageID = '';
-  //       }
-  //     });
-  //   }
-  // }
-
   void addMessage(bool isClicked) async {
     if (_messageController.text.isNotEmpty) {
       final message = _messageController.text;
