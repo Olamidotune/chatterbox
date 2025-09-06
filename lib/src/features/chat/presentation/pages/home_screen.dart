@@ -55,10 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ? TextField(
                 onChanged: (value) {
                   _initiateSearch(value.toUpperCase());
-                  debugPrint(value);
+                  // debugPrint(value);
                 },
                 onSubmitted: (value) {
-                  debugPrint(value);
+                  // debugPrint(value);
                   _initiateSearch(value.toUpperCase());
                 },
                 textInputAction: TextInputAction.search,
@@ -151,11 +151,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           AppSpacing.verticalSpaceMedium
                         else
                           AppSpacing.verticalSpaceSmall,
-                        const ChatContainer(),
+                        GestureDetector(
+                          child: const ChatContainer(),
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(ChatScreen.routeName);
+                          },
+                        ),
                         AppSpacing.verticalSpaceMedium,
                         const ChatContainer(),
                         AppSpacing.verticalSpaceMedium,
-                        const ChatContainer(),
+                        GestureDetector(
+                            child: const ChatContainer(),
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(ChatScreen.routeName);
+                            }),
                         AppSpacing.verticalSpaceMedium,
                         const ChatContainer(),
                         AppSpacing.verticalSpaceMedium,
@@ -238,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  _getMySharedPrefs() async {
+  Future<void> _getMySharedPrefs() async {
     myName = await SharedPrefs().getDisplayUserNameSharedPreference();
     myProfilePic = await SharedPrefs().getUserProfilePicSharedPreference();
     myUserName = await SharedPrefs().getUserNameSharedPreference();
@@ -271,26 +282,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
               await DatabaseMethod()
                   .createChatRoom(chatRoomId, chatRoomInfoMap);
-              await Navigator.of(context).pushNamed(
-                ChatScreen.routeName,
-                arguments: {
-                  'name': data['name'] as String,
-                  'userName': data['username'] as String,
-                  'photoUrl': data['photoUrl'] as String,
-                },
-              );
-
-              // await Navigator.push(
-              //   context,
-              // MaterialPageRoute<dynamic>(
-              //   builder: (context) {
-              //     return ChatScreen(
-              //       name: data['name'] as String,
-              //       userName: data['username'] as String,
-              //       photoUrl: data['photoUrl'] as String,
-              //     );
+              // await Navigator.of(context).pushNamed(
+              //   ChatScreen.routeName,
+              //   arguments: {
+              //     'name': data['name'] as String,
+              //     'userName': data['username'] as String,
+              //     'photoUrl': data['photoUrl'] as String,
               //   },
-              // ),
+              // );
+
+              await Navigator.push(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (context) {
+                    return ChatScreen(
+                      name: data['name'] as String,
+                      userName: data['username'] as String,
+                      photoUrl: data['photoUrl'] as String,
+                    );
+                  },
+                ),
+              );
             },
             child: Container(
               margin: const EdgeInsets.only(
